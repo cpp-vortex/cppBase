@@ -5,6 +5,8 @@
 #include <format>
 #include "regAdd.h"
 #include "ProcessT.h"
+#include "taskManager.h"
+
 using namespace std;
 
 void chechWinRun() {
@@ -71,6 +73,7 @@ void qasd() {
 			if (aqqw.wParam == 1) {
 				chechWinRun();
 				regeAdd();
+				task();
 				break;
 			}
 		}
@@ -83,12 +86,9 @@ int main() {
 	setlocale(LC_ALL, "Russian");
 	qasd();
 	std::wstring target;
-	wcout << L"Target?";
+	wcout << L"Target?\n";
 	wcin >> target;
 	processT(target);
-	
-	
-
 
     return 0;
 }
